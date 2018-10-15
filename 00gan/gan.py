@@ -139,47 +139,62 @@ def train(epochs, batch_size=128, sample_interval=50):
 
     # Rescale -1 to 1
     X_train = X_train / 127.5 - 1.
+    #增加维度,从第几个括号
     X_train = np.expand_dims(X_train, axis=3)
 
-#    # Adversarial ground truths
-#    valid = np.ones((batch_size, 1))
-#    fake = np.zeros((batch_size, 1))
-#
-#    for epoch in range(epochs):
-#
-#        # ---------------------
-#        #  Train Discriminator
-#        # ---------------------
-#
-#        # Select a random batch of images
-#        idx = np.random.randint(0, X_train.shape[0], batch_size)
-#        imgs = X_train[idx]
-#
-#        noise = np.random.normal(0, 1, (batch_size, latent_dim))
-#
-#        # Generate a batch of new images
-#        gen_imgs = generator.predict(noise)
-#
-#        # Train the discriminator
-#        d_loss_real = discriminator.train_on_batch(imgs, valid)
-#        d_loss_fake = discriminator.train_on_batch(gen_imgs, fake)
-#        d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
-#
-#        # ---------------------
-#        #  Train Generator
-#        # ---------------------
-#
-#        noise = np.random.normal(0, 1, (batch_size, latent_dim))
-#
-#        # Train the generator (to have the discriminator label samples as valid)
-#        g_loss = combined.train_on_batch(noise, valid)
-#
-#        # Plot the progress
-#        print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
-#
-#        # If at save interval => save generated image samples
-#        if epoch % sample_interval == 0:
-#            sample_images(epoch)
+    # Adversarial ground truths
+    #生成矩阵：batch_sizeX1维
+    valid = np.ones((batch_size, 1))
+    fake = np.zeros((batch_size, 1))
+
+    for epoch in range(epochs):
+
+        # ---------------------
+        #  Train Discriminator
+        # ---------------------
+
+        # Select a random batch of images
+        #产生随机数
+        #第一个参数随机数中最小值
+        #第二个参数随机数中最大值
+        #第三个参数数据的个数
+        idx = np.random.randint(0, X_train.shape[0], batch_size)
+        #从训练数据中，随机获取 X_train.shape[0]个数据
+        imgs = X_train[idx]
+        
+        #随机产生噪声
+        noise = np.random.normal(0, 1, (batch_size, latent_dim))
+
+        # Generate a batch of new images
+        gen_imgs = generator.predict(noise)
+
+        # Train the discriminator
+        #利用真实数据对描述器进行训练
+        d_loss_real = discriminator.train_on_batch(imgs, valid)
+        #利用生成数据对描述器进行训练
+        d_loss_fake = discriminator.train_on_batch(gen_imgs, fake)
+        #计算真实数据的损失和生成数据的损失
+        d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
+
+        # ---------------------
+        #  Train Generator
+        # ---------------------
+        
+        #随机产生噪声
+        noise = np.random.normal(0, 1, (batch_size, latent_dim))
+        
+        # Train the generator (to have the discriminator label samples as valid)
+        # G和D是揉在一起了，让G去欺骗D，因为揉在一起了，所以用和在一起的训练器
+        # The combined model  (stacked generator and discriminator)
+        # Trains the generator to fool the discriminator
+        g_loss = combined.train_on_batch(noise, valid)
+
+        # Plot the progress
+        print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
+
+        # If at save interval => save generated image samples
+        if epoch % sample_interval == 0:
+            sample_images(epoch)
             
 def sample_images(epoch):
     r, c = 5, 5
