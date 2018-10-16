@@ -40,19 +40,22 @@ if __name__ == "__main__":
     del test["GMSFHM"]
     del test["XLH"]
 
-    
 
     
     #预测
     Result = MNB.predict(test.iloc[:,:-1])
-#    #写数据
-#    database = cx_Oracle.connect('system', 'oracle', '192.168.32.130:1521/XE')
-#    
-#    sql="UPDATE help_category SET JG=%d WHERE XLH=%d" % (Result[0],xlh[0])
-#    database.execute(sql)
-#    database.execute('commit')
-#    database.close()
-#    pass
+    #写数据
+    database = cx_Oracle.connect('system', 'oracle', '192.168.32.130:1521/XE')
+    c = database.cursor()
+    
+    for i in range(len(Result)):
+    
+        sql="UPDATE help_category SET JG=%d WHERE XLH=%d" % (Result[i],xlh[i])
+        c.execute(sql)
+        c.execute('commit')
+    pass
+    c.close()
+    pass
 
 
 
