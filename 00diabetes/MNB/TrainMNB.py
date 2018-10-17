@@ -22,7 +22,7 @@ def trainModel(data):
     joblib.dump(MNB, "./model/MultinomialNBModel.m")
     return MNB
     pass
-def getTrainData(a=1):
+def getTrainData():
 
     #链接数据库    
     database = cx_Oracle.connect('system', 'oracle', '192.168.32.130:1521/XE')
@@ -33,13 +33,12 @@ def getTrainData(a=1):
     #数据类型转换成int
     TrainData=TrainData
     database.close()
-    #删除多余字符
+    #删除多余字符    
     del TrainData["XM"]
     del TrainData["XB"]
     del TrainData["RYBH"]
     del TrainData["GMSFHM"]
     del TrainData["XLH"]
-    
     return TrainData
     pass
 def getPredictData():
@@ -49,16 +48,15 @@ def getPredictData():
     sql_month = " SELECT * FROM jjj where JG is null"
     #数据库中读取数据
     TestData = pd.read_sql_query(sql_month,con=database)
-    del TestData["result"]
     #数据类型转换成int
     TestData=TestData
     database.close()
     
-    #删除多余字符
-    del TrainData["XM"]
-    del TrainData["XB"]
-    del TrainData["RYBH"]
-    del TrainData["GMSFHM"]
+    #删除多余字符    
+    del TestData["XM"]
+    del TestData["XB"]
+    del TestData["RYBH"]
+    del TestData["GMSFHM"]
         
     return TestData
     pass
@@ -81,7 +79,12 @@ if __name__ == "__main__":
         #读取训练好的模型
         MNB=joblib.load("./model/MultinomialNBModel.m")
         #获取要预测的数据
-        Test=getPredictData(a=1)
+        Test=getPredictData()
+        if len(Test) < 1:
+            time.sleep(1)
+            count=count+1
+            continue
+            pass
         xlh=Test["XLH"]
         del Test["XLH"]
 
@@ -93,9 +96,8 @@ if __name__ == "__main__":
         #链接数据库    
         database = cx_Oracle.connect('system', 'oracle', '192.168.32.130:1521/XE')
         c = database.cursor()
-        for i in range(len(Result)):
-            
-            sql="UPDATE help_category SET result=%d WHERE XLH=%d" % (Result[i],xlh[i])
+        for i in range(len(Result)):     
+            sql="UPDATE help_category SET JG=%d WHERE XLH=%d" % (Result[i],xlh[i])
             c.execute(sql)
             c.execute('commit')
             pass
