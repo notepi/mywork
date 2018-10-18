@@ -300,38 +300,38 @@ if __name__ == "__main__":
 #    svc.fit(XdataTrain, TagTrain)
 #     svc=grid_search
     
-#    #训练模型
-#    model = svm.SVC(kernel='rbf')
-#    c_can = np.logspace(-2, 0.65, 10)
-#    gamma_can = np.logspace(-2, 2, 10)
-#    start = time()
-#    svc = GridSearchCV(model, param_grid={'C': c_can, 'gamma': gamma_can}, cv=5)
-#    svc.fit(XdataTrain, TagTrain)    
-#
-#    print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
-#      % (time() - start, len(svc.cv_results_['params'])))
-#    report(svc.cv_results_)
-# #预测结果        
-#    print("============================svm_TEST=========================================")
-#    Result = svc.predict(XdataTest)
-#    print('The accuracy is:',accuracy_score(TagTest,Result))
-#    #print(confusion_matrix(y_test,y_pred,labels=[0,1,2]))
-#    print('The confusion matrix is:\n',confusion_matrix(TagTest,Result))
-#    # 3 precision, recall, f1 score
-#    print('The precision, recall, f1 score are:\n',classification_report(TagTest,Result))
-#    #all
-#    print('The precision are:\n',precision_score(TagTest,Result,average='micro'))
-#    
-#    #模型结果        
-#    print("============================svm_TRAIN=========================================")
-#    Result = svc.predict(XdataTrain)
-#    print('The accuracy is:',accuracy_score(TagTrain,Result))
-#    #print(confusion_matrix(y_test,y_pred,labels=[0,1,2]))
-#    print('The confusion matrix is:\n',confusion_matrix(TagTrain,Result))
-#    # 3 precision, recall, f1 score
-#    print('The precision, recall, f1 score are:\n',classification_report(TagTrain,Result))
-#    #all
-#    print('The precision are:\n',precision_score(TagTrain,Result,average='micro')) 
+    #训练模型
+    model = svm.SVC(kernel='rbf')
+    c_can = np.logspace(-2, 0.65, 10)
+    gamma_can = np.logspace(-2, 2, 10)
+    start = time()
+    svc = GridSearchCV(model, param_grid={'C': c_can, 'gamma': gamma_can}, cv=5)
+    svc.fit(XdataTrain, TagTrain)    
+
+    print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
+      % (time() - start, len(svc.cv_results_['params'])))
+    report(svc.cv_results_)
+ #预测结果        
+    print("============================svm_TEST=========================================")
+    Result = svc.predict(XdataTest)
+    print('The accuracy is:',accuracy_score(TagTest,Result))
+    #print(confusion_matrix(y_test,y_pred,labels=[0,1,2]))
+    print('The confusion matrix is:\n',confusion_matrix(TagTest,Result))
+    # 3 precision, recall, f1 score
+    print('The precision, recall, f1 score are:\n',classification_report(TagTest,Result))
+    #all
+    print('The precision are:\n',precision_score(TagTest,Result,average='micro'))
+    
+    #模型结果        
+    print("============================svm_TRAIN=========================================")
+    Result = svc.predict(XdataTrain)
+    print('The accuracy is:',accuracy_score(TagTrain,Result))
+    #print(confusion_matrix(y_test,y_pred,labels=[0,1,2]))
+    print('The confusion matrix is:\n',confusion_matrix(TagTrain,Result))
+    # 3 precision, recall, f1 score
+    print('The precision, recall, f1 score are:\n',classification_report(TagTrain,Result))
+    #all
+    print('The precision are:\n',precision_score(TagTrain,Result,average='micro')) 
 
 
 #    #训练模型
