@@ -198,23 +198,23 @@ def train(epochs, batch_size=128, sample_interval=50):
             print("train",epoch)
             pass
             
-#def sample_images(epoch):
-#    r, c = 5, 5
-#    noise = np.random.normal(0, 1, (r * c, latent_dim))
-#    gen_imgs = generator.predict(noise)
-#
-#    # Rescale images 0 - 1
-#    gen_imgs = 0.5 * gen_imgs + 0.5
-#
-#    fig, axs = plt.subplots(r, c)
-#    cnt = 0
-#    for i in range(r):
-#        for j in range(c):
-#            axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')
-#            axs[i,j].axis('off')
-#            cnt += 1
-#    fig.savefig("images/%d.png" % epoch)
-#    plt.close()
+def sample_images(epoch):
+    r, c = 5, 5
+    noise = np.random.normal(0, 1, (r * c, latent_dim))
+    gen_imgs = generator.predict(noise)
+
+    # Rescale images 0 - 1
+    gen_imgs = 0.5 * gen_imgs + 0.5
+
+    fig, axs = plt.subplots(r, c)
+    cnt = 0
+    for i in range(r):
+        for j in range(c):
+            axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')
+            axs[i,j].axis('off')
+            cnt += 1
+    fig.savefig("images/%d.png" % epoch)
+    plt.close()
 if __name__ == '__main__':
     AllData = pd.read_csv('finaldata.csv')
     X_train=AllData.iloc[:,:-2].values
