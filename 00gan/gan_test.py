@@ -217,41 +217,42 @@ def sample_images(epoch):
     plt.close()
 if __name__ == '__main__':
     AllData = pd.read_csv('finaldata.csv')
-    X_train=AllData.iloc[:,:-2].values
-    img_rows = 28
-    channels = 1
-    img_shape = (img_rows, channels)
-    latent_dim = 100
-     
-    optimizer = Adam(0.0002, 0.5)
-    
-    # Build and compile the discriminator
-    discriminator = build_discriminator()
-    discriminator.compile(loss='binary_crossentropy',
-        optimizer=optimizer,
-        metrics=['accuracy'])
-    
-    # Build the generator
-    generator = build_generator()
-    
-    # The generator takes noise as input and generates imgs
-    # 随机产生噪声作为初始值
-    z = Input(shape=(latent_dim,))
-    img = generator(z)
-    
-    # For the combined model we will only train the generator
-    discriminator.trainable = False
-
-    # The discriminator takes generated images as input and determines validity
-    validity = discriminator(img)
-
-    # The combined model  (stacked generator and discriminator)
-    # Trains the generator to fool the discriminator
-    #将G和D合并在一个model中？？？
-    combined = Model(z, validity)
-    combined.compile(loss='binary_crossentropy', optimizer=optimizer)
-    
-    #train
-    train(epochs=300, batch_size=32, sample_interval=200)
-    
-    pass
+    del AllData['time']
+#    X_train=AllData.iloc[:,:-2].values
+#    img_rows = 28
+#    channels = 1
+#    img_shape = (img_rows, channels)
+#    latent_dim = 100
+#     
+#    optimizer = Adam(0.0002, 0.5)
+#    
+#    # Build and compile the discriminator
+#    discriminator = build_discriminator()
+#    discriminator.compile(loss='binary_crossentropy',
+#        optimizer=optimizer,
+#        metrics=['accuracy'])
+#    
+#    # Build the generator
+#    generator = build_generator()
+#    
+#    # The generator takes noise as input and generates imgs
+#    # 随机产生噪声作为初始值
+#    z = Input(shape=(latent_dim,))
+#    img = generator(z)
+#    
+#    # For the combined model we will only train the generator
+#    discriminator.trainable = False
+#
+#    # The discriminator takes generated images as input and determines validity
+#    validity = discriminator(img)
+#
+#    # The combined model  (stacked generator and discriminator)
+#    # Trains the generator to fool the discriminator
+#    #将G和D合并在一个model中？？？
+#    combined = Model(z, validity)
+#    combined.compile(loss='binary_crossentropy', optimizer=optimizer)
+#    
+#    #train
+#    train(epochs=300, batch_size=32, sample_interval=200)
+#    
+#    pass
