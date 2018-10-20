@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Sat Jul 28 16:28:46 2018
-
 @author: pan
 """
 
