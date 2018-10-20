@@ -233,6 +233,7 @@ if __name__ == '__main__':
     # Build the generator
     generator = build_generator()
     
+    
     # The generator takes noise as input and generates imgs
     # 随机产生噪声作为初始值
     z = Input(shape=(latent_dim,))
@@ -247,6 +248,9 @@ if __name__ == '__main__':
     # The combined model  (stacked generator and discriminator)
     # Trains the generator to fool the discriminator
     #将G和D合并在一个model中？？？
+    '''
+    https://keras.io/zh/getting-started/functional-api-guide/#_2
+    '''
     combined = Model(z, validity)
     combined.compile(loss='binary_crossentropy', optimizer=optimizer)
     

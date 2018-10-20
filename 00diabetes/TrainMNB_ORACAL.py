@@ -126,12 +126,12 @@ if __name__ == "__main__":
         #推送
         #链接数据库    
         database = cx_Oracle.connect('system', 'oracle', '192.168.32.130:1521/XE')
-
+        c = database.cursor()
         for i in range(len(Result)):
             
             sql="UPDATE help_category SET result=%d WHERE XLH=%d" % (Result[i],xlh[i])
-            database.execute(sql)
-            database.execute('commit')
+            c.execute(sql)
+            c.execute('commit')
             pass
         database.close()
         
