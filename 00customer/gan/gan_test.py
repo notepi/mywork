@@ -106,9 +106,12 @@ def build_generator():
     #在每一个批次的数据中标准化前一层的激活项， 即，应用一个维持激活项平均值接近 0，标准差接近 1 的转换。
     model.add(BatchNormalization(momentum=0.8))
     
-    model.add(Dense(512))
-    model.add(LeakyReLU(alpha=0.2))
-    model.add(BatchNormalization(momentum=0.8))
+    for i in range(1):
+    
+        model.add(Dense(512))
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(BatchNormalization(momentum=0.8))
+        pass
     
     model.add(Dense(1024))
     model.add(LeakyReLU(alpha=0.2))
@@ -137,10 +140,7 @@ def train(epochs, batch_size=128, sample_interval=50):
 #    # Load the dataset
 #    (X_train, _), (_, _) = mnist.load_data()
     global X_train
-    # Rescale -1 to 1
-    X_train = X_train / 127.5 - 1.
-    #增加维度,从第几个括号
-    X_train = np.expand_dims(X_train, axis=2)
+
 
     # Adversarial ground truths
     #生成矩阵：batch_sizeX1维
@@ -217,9 +217,14 @@ def sample_images(epoch):
 #    fig.savefig("images/%d.png" % epoch)
 #    plt.close()
 if __name__ == '__main__':
-    AllData = pd.read_csv('/Users/pan/Documents/work/HomeWork/mywork/00customer/code/dataprocess/finaldata0911.csv')
-    del AllData['time']
+    AllData = pd.read_csv('../code/dataprocess/finaldata0922.csv')
+#    del AllData['time']
     X_train=AllData.iloc[:,:-1].values
+#    # Rescale -1 to 1
+#    X_train = X_train / 127.5 - 1.
+    #增加维度,从第几个括号
+    X_train = np.expand_dims(X_train, axis=2)
+    
     img_rows = len(AllData.iloc[1,:-1])
     channels = 1
     img_shape = (img_rows, channels)
@@ -254,6 +259,6 @@ if __name__ == '__main__':
     combined.compile(loss='binary_crossentropy', optimizer=optimizer)
     
     #train
-    train(epochs=3000, batch_size=32, sample_interval=200)
+    train(epochs=1000, batch_size=32, sample_interval=200)
     
     pass
