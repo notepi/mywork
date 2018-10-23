@@ -25,6 +25,7 @@ if __name__ == "__main__":
         
         #为每个文件分割
         a=pd.read_csv(path,encoding='GBK')
+        a.date=a.date.apply(str)+a.hour.apply(str)
         #24h的关键字不在type中的内容被取出
         aa= a[a.type.apply(lambda x: "24h" not in x)]
         #提取所有特征的名字
@@ -47,6 +48,7 @@ if __name__ == "__main__":
             #每种数据放在目录中
             data[i].to_csv("./newdata_TypeSpilt"+"/"+typename[i]+"/"+typename[i]+path.split('/')[-1],
                             encoding='GBK',index=False)
+            print(i)
     #        break
             pass
 #        break

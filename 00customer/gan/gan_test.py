@@ -74,8 +74,9 @@ def build_discriminator():
     model.add(LeakyReLU(alpha=0.2))
     #前面是为了避免细胞失活等用的高级激活函数，所以要专门做一个层
     #到最后了，是单独的一层，激活函数在预定义激活函数中，无需专门做一层
-    #最后一层表示输出的只有一个
-    model.add(Dense(1, activation='sigmoid'))
+#    #最后一层表示输出的只有一个
+#    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(1, activation='linear'))
     #打印出模型概况，它实际调用的是keras.utils.print_summary
     model.summary()
 
@@ -259,6 +260,6 @@ if __name__ == '__main__':
     combined.compile(loss='binary_crossentropy', optimizer=optimizer)
     
     #train
-    train(epochs=1000, batch_size=32, sample_interval=200)
+    train(epochs=10000, batch_size=32, sample_interval=200)
     
     pass

@@ -50,6 +50,15 @@ if __name__ == "__main__":
 #        except ValueError:
 #            print("Oops!  That was no valid number.  Try again   ")
     errorf=[]
+    c=[]
+    for i in filel:
+        a=(int(i.split("/")[-1].split(".")[0].split("_")[-1]))
+        if a>= 20150601 and a<= 20180531:
+            c.append(i)
+            pass
+#        break
+        pass
+    filel=c
     #读取文件内容
     AllData=pd.DataFrame()
     a=0
@@ -67,14 +76,14 @@ if __name__ == "__main__":
                 pass
             a=a+1
             #出现读取文件异常的，忽略这个文件，把已经读取的文件写入文件中，另起一个文件再读
-            AllData.to_csv("./newdata/"+str(a)+"AllData.csv",encoding='GBK',index=False)
+            AllData.to_csv("./newdata_TypeConcat/"+str(a)+"AllData.csv",encoding='GBK',index=False)
             AllData=pd.DataFrame()
             errorf.append(i)
             pass
 #        break
         pass
     #最后一个文件
-    AllData.to_csv("./newdata/"+str(a)+"AllData.csv",encoding='GBK',index=False)
+    AllData.to_csv("./newdata_TypeConcat/"+str(a)+"AllData.csv",encoding='GBK',index=False)
     #未读取成功的
     pd.DataFrame(errorf).to_csv("errorf.csv")
     
