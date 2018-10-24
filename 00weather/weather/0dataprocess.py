@@ -38,6 +38,17 @@ if __name__ == "__main__":
     g=Data["风速"].apply(lambda x:x.split('/')[0][:-2])
     
     final=pd.concat([a,b,c,d,e,f,g],axis=1)
+    
+    name=final.columns.values.tolist()
+    for i in name[1:]:
+        #用前一个数据进行填充
+        print(i)
+        #空缺，是nan
+        final[i]=final[i].fillna(method="pad")
+        #空缺是，""
+        final[i]=final[i].replace("",method="pad")
+#        break
+        pass
     final.to_csv("weatherdata.csv",index=False,encoding = "GBK")
     
     
