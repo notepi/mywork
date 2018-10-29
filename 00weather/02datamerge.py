@@ -72,7 +72,7 @@ if __name__ == "__main__":
 #                break
                 pass
             
-            del DataAA['hour'] 
+#            del DataAA['hour'] 
             del DataAA[u'日期'] 
             
             cname=DataAA.columns.values.tolist()
@@ -102,7 +102,23 @@ if __name__ == "__main__":
         
 #        break
         pass #目录
-        
+    
+    
+    
+    
+    rootfile="./mergedata"
+    newpath="./mergedata/"
+    weatherdata=pd.read_csv("./weather/weatherdata.csv",encoding = "GBK")
+#    Paths,dirs,AllFile = file_name(rootfile)
+    
+    #读跟目录下所有的目录
+    dirl=[]
+    for paths, dirs, files in os.walk(rootfile): 
+        break
+        pass
+    #对目录进行拼接
+    cc = [rootfile+'/'+x for x in dirs]
+    print("=====")
     #城市总值合并
     citydata=pd.read_csv("./city/city.csv",encoding = "GBK")
     del citydata["hour"]
@@ -116,7 +132,7 @@ if __name__ == "__main__":
         citytemp["values"]=citytemp["values"].fillna(method="pad")
 #        print("empty:",len(citytemp[citytemp["values"].isnull()]))
         Paths,dirs,AllFile = file_name(name) 
-        AllFile=[name+'/'+i for i in AllFile]
+        AllFile=[name+'/'+i for i in AllFile if ".DS_Store" not in i]
         
         #读取每个目录下的每个文件
         for i in AllFile:
