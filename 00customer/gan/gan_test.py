@@ -260,6 +260,6 @@ if __name__ == '__main__':
     combined.compile(loss='binary_crossentropy', optimizer=optimizer)
     
     #train
-    train(epochs=10000, batch_size=32, sample_interval=200)
+    train(epochs=3, batch_size=32, sample_interval=200)
     
     pass
