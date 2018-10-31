@@ -1,0 +1,8 @@
+point-观测点名称
+status-town-城市观测点
+           village-郊区观测点
+           control-对照点
+           traffic_pollution-交通污染监控点
+part-八块分，从时钟1点钟方向顺时针分别分为1-8
+      - 圆圈分，inside-小圆内的点
+                      outside-小圆外的点

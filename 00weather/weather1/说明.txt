@@ -1,0 +1,9 @@
+Date	日期
+Ave. T. 	平均温度
+Max. T. 	最高温度
+Min. T. 	最低温度
+Prec. 	降水量
+S.L.Press./ Gheopot.	气压
+Wind dir	                风向（前面是角度，后面是方向）
+Wind sp. (Km/h)	风速
+Cloud c.                   云量
