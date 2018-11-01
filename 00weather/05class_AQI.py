@@ -132,7 +132,7 @@ if __name__ == "__main__":
     clf = svm.SVC()
     
     # use a full grid over all parameters
-    param_grid = {"kernel": ["linear","rbf","sigmoid"],
+    param_grid = {#"kernel": ["linear","rbf","sigmoid"],
                   "C": np.logspace(-2, 2, 10),
                   "gamma": np.logspace(-2, 2, 10)
                   }
