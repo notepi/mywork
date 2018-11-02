@@ -43,14 +43,15 @@ if __name__ == "__main__":
         break
         pass
     #对目录进行拼接
-    cc = [rootfile+'/'+x for x in dirs]
+    cc = [rootfile+'/'+x for x in dirs if ".DS_Store" not in x]
     print("=====")
     #读取每个目录下的文件名，然后叠加
     filel=[]
     #对目录进行历边
     for name in cc:
         Paths,dirs,AllFile = file_name(name) 
-        AllFile=[name+'/'+i for i in AllFile]
+        AllFile=[name+'/'+i for i in AllFile if ".DS_Store" not in i]
+        AllFile=[i for i in AllFile if "_" not in i]
         #创建目录
 #        a=name.split('/')[-1]
         try:
