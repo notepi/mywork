@@ -1,2 +1,5 @@
 00customer/gd_train_data.txt
+00weather\mergefinal\AQI\AQI.csv
+00weather\mergefinal\PM10\PM10.csv
+00weather\mergefinal\PM2.5\PM2.5.csv
 dd.txt
