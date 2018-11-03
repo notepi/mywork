@@ -98,6 +98,8 @@ def make_model(dense_layer_sizes, filters, kernel_size, pool_size):
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
+    #打印出模型概况，它实际调用的是keras.utils.print_summary
+    model.summary()
 
     return model
 
@@ -199,18 +201,18 @@ if __name__ == "__main__":
                              scoring='neg_log_loss',
                              n_jobs=1)
     
-    validator.fit(XdataTrain, TagTrain)
-    
-    print('The parameters of the best model are: ')
-    print(validator.best_params_)
-    
-    # validator.best_estimator_ returns sklearn-wrapped version of best model.
-    # validator.best_estimator_.model returns the (unwrapped) keras model
-    best_model = validator.best_estimator_.model
-    metric_names = best_model.metrics_names
-    metric_values = best_model.evaluate(XdataTest, TagTest)
-    for metric, value in zip(metric_names, metric_values):
-        print(metric, ': ', value)
+#    validator.fit(XdataTrain, TagTrain)
+#    
+#    print('The parameters of the best model are: ')
+#    print(validator.best_params_)
+#    
+#    # validator.best_estimator_ returns sklearn-wrapped version of best model.
+#    # validator.best_estimator_.model returns the (unwrapped) keras model
+#    best_model = validator.best_estimator_.model
+#    metric_names = best_model.metrics_names
+#    metric_values = best_model.evaluate(XdataTest, TagTest)
+#    for metric, value in zip(metric_names, metric_values):
+#        print(metric, ': ', value)
     
     
     
