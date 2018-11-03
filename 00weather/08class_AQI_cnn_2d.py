@@ -38,11 +38,12 @@ import seaborn as sns
 
 from scipy.stats import randint as sp_randint
 from keras.models import Sequential
-from keras.layers import Dropout,Dense,Conv2D,MaxPooling2D,Flatten,Conv1D,MaxPooling1D
+from keras.layers import Dropout,Dense,Conv2D,MaxPooling2D,Flatten,Conv1D,MaxPooling1D,Activation
 #from keras.datasets import mnist 
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.examples.tutorials.mnist import input_data
 import scipy.io as sio 
+from keras.wrappers.scikit_learn import KerasClassifier
 
 def file_name(file_dir):  
   for paths, dirs, files in os.walk(file_dir): 
@@ -65,6 +66,41 @@ def report(results, n_top=3):
             pass
         pass
     pass
+
+def make_model(dense_layer_sizes, filters, kernel_size, pool_size):
+    '''Creates model comprised of 2 convolutional layers followed by dense layers
+
+    dense_layer_sizes: List of layer sizes.
+        This list has one number for each layer
+    filters: Number of convolutional filters in each convolutional layer
+    kernel_size: Convolutional kernel size
+    pool_size: Size of pooling area for max pooling
+    '''
+
+    model = Sequential()
+    model.add(Conv2D(filters, kernel_size,
+                     padding='valid',
+                     input_shape=input_shape))
+    model.add(Activation('relu'))
+    model.add(Conv2D(filters, kernel_size))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=pool_size))
+    model.add(Dropout(0.25))
+
+    model.add(Flatten())
+    for layer_size in dense_layer_sizes:
+        model.add(Dense(layer_size))
+        model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adadelta',
+                  metrics=['accuracy'])
+
+    return model
+
 if __name__ == "__main__":
     file="./mergefinal/AQI/AQI.csv"
     Data=pd.read_csv(file,encoding = "GBK")
@@ -94,15 +130,7 @@ if __name__ == "__main__":
     Data['tag']=tag
     del Data["values"]
     
-    #画图
-#    n, bins, patches = plt.hist(Data['tag'], 11, density=True, facecolor='g', alpha=0.75)
-#    
-##    plt.figure()
-#    plt.xlabel('Times')
-#    plt.ylabel('Counts')
-#    plt.title('Frequency distribution')
-#    plt.grid(True)
-#    plt.show()  
+
     
 #做样本不均衡处理
 #    #生成训练数据和测试数据 
@@ -131,9 +159,21 @@ if __name__ == "__main__":
     TagTest = DataTest.iloc[:,-1]
     
     
+    #拓展维度
+    XdataTrain['674']=0
+    XdataTest['674']=0
+    XdataTrain['675']=0
+    XdataTest['675']=0
+    XdataTrain['676']=0
+    XdataTest['676']=0
     
-    XdataTrain=np.expand_dims(XdataTrain, axis=2)
-    XdataTest=np.expand_dims(XdataTest, axis=2)
+    XdataTrain=XdataTrain.values.reshape(XdataTrain.shape[0],26,26)
+    XdataTest=XdataTest.values.reshape(XdataTest.shape[0],26,26)
+    
+    XdataTrain=np.expand_dims(XdataTrain, axis=len(XdataTrain.shape))
+    XdataTest=np.expand_dims(XdataTest, axis=len(XdataTest.shape))
+    
+    input_shape=tuple(XdataTest.shape[1:])
     
     #cnn
     print("============================CNN=========================================")
@@ -141,84 +181,52 @@ if __name__ == "__main__":
     enc.fit(TagTrain.values.reshape(-1,1))
     TagTest = enc.transform(TagTest.values.reshape(-1,1)).toarray()
     TagTrain = enc.transform(TagTrain.values.reshape(-1,1)).toarray()
-
-         
-    #model
-    #创建模型序列
-    model = Sequential()
-    #######卷积层
-    #25表示卷积核的个数,(3,3)表示卷积核的大小,
-    #(28,28,1)表示图片是28x28,一维
-##    Conv1D(filters, 
-##           kernel_size, 
-##           strides=1, 
-##           padding='valid', 
-##           dilation_rate=1, 
-##           activation=None, 
-##           use_bias=True, 
-##           kernel_initializer='glorot_uniform', 
-##           bias_initializer='zeros', 
-##           kernel_regularizer=None, 
-##           bias_regularizer=None, 
-##           activity_regularizer=None, 
-##           kernel_constraint=None, 
-##           bias_constraint=None)
-##    model.add(Conv1D(25,8,input_shape=(None, 38)))  
-    model.add(Conv1D(filters=25,kernel_size=8,input_shape=(XdataTrain.shape[1], 1))) 
-    #变成25x26x26
-    #新的图是26x26,因为边边角消失
     
-    #pooling层
-    #在(2,2)中取max
-    model.add(MaxPooling1D(4))
-    #变成25x13x13
-    #新的图是13x13,因为（2,2)是在两行两列中取一个出来
-    
-    #每次的都可以是不一样的
-    ######卷积层
-    #根据文献，在靠近input部分少，越往后越多
-    model.add(Conv1D(51,4)) 
-    #见文章http://www.360doc.com/content/18/0305/05/5315_734350634.shtml
-    #在卷积核中，并不是每个Featurn map都是用一样的卷积核
-    #最后的结果变成50x11x11
-    #这是因为在上一次的卷积中是将输入1个通道，变成输出25个通道
-    #在第二次时输入就变成了25个通道,设置输出多少个通道都可以
-    
-    model.add(MaxPooling1D(4))
-    #50x5x5
+    num_classes=TagTest.shape[1]
     
     
-    #####关于参数的多少
-    #第一次通道是1，每个通道中filter是3x3，所以是9,一共是25个filter
-    #第二次通道是25，每个通道中filter是3x3，所以是3x3x25，这样是一个filter的参数
-    #每个filter把一个多层的通道压成单通道的图
-    #新的多通道是由多个filter构成的
-    #所以也就可以知道，为何可以随便设置输出了，这样是51,也就是51个filter，每个的
-    #参数是3x3x25
     
-    #fltten
-    model.add(Flatten())
+    dense_size_candidates = [[32], [64], [32, 32], [64, 64]]
+    my_classifier = KerasClassifier(make_model, batch_size=32)
+    validator = GridSearchCV(my_classifier,
+                             param_grid={'dense_layer_sizes': dense_size_candidates,
+                                         # epochs is avail for tuning even when not
+                                         # an argument to model building function
+                                         'epochs': [3, 6],
+                                         'filters': [8],
+                                         'kernel_size': [3],
+                                         'pool_size': [2]},
+                             scoring='neg_log_loss',
+                             n_jobs=1)
     
-    #DNN
-    for i in range(2):
-        model.add(Dense(100,activation='relu'))
-        pass
+    validator.fit(XdataTrain, TagTrain)
     
-    model.add(Dense(TagTrain.shape[1],activation='softmax'))
+    print('The parameters of the best model are: ')
+    print(validator.best_params_)
     
-    # 多分类问题
-    model.compile(optimizer='rmsprop',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
-    ##############
-    # 训练模型，以 32 个样本为一个 batch 进行迭代
-    model.fit(XdataTrain, TagTrain, epochs=100, batch_size=32)
-
-    #测试
-    #测试结果
-    print("========")
-    loss_and_metrics = model.evaluate(XdataTest, TagTest, batch_size=10)
-    print("test result is:", loss_and_metrics[1])    
+    # validator.best_estimator_ returns sklearn-wrapped version of best model.
+    # validator.best_estimator_.model returns the (unwrapped) keras model
+    best_model = validator.best_estimator_.model
+    metric_names = best_model.metrics_names
+    metric_values = best_model.evaluate(XdataTest, TagTest)
+    for metric, value in zip(metric_names, metric_values):
+        print(metric, ': ', value)
+    
+    
+    
+    
+    
+    
+    
+#    ##############
+#    # 训练模型，以 32 个样本为一个 batch 进行迭代
+#    model.fit(XdataTrain, TagTrain, epochs=100, batch_size=32)
+#
+#    #测试
+#    #测试结果
+#    print("========")
+#    loss_and_metrics = model.evaluate(XdataTest, TagTest, batch_size=10)
+#    print("test result is:", loss_and_metrics[1])    
     
 ################################################################################
 
