@@ -67,7 +67,7 @@ def report(results, n_top=3):
         pass
     pass
 
-def make_model(dense_layer_sizes, filters, kernel_size, pool_size):
+def make_model(dense_layer_sizes, Neuron, filters, kernel_size, pool_size):
     '''Creates model comprised of 2 convolutional layers followed by dense layers
 
     dense_layer_sizes: List of layer sizes.
@@ -88,8 +88,8 @@ def make_model(dense_layer_sizes, filters, kernel_size, pool_size):
     model.add(Dropout(0.25))
 
     model.add(Flatten())
-    for layer_size in dense_layer_sizes:
-        model.add(Dense(layer_size))
+    for layer_size in range(dense_layer_sizes):
+        model.add(Dense(Neuron))
         model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(num_classes))
@@ -188,21 +188,27 @@ if __name__ == "__main__":
     
     
     
-    dense_size_candidates = [[32], [64], [32, 32], [64, 64]]
+    dense_size_candidates = np.arange(3,10,2)
+    epochs_size = np.arange(3,24,3)
+    filters_size = np.arange(8,16,2)
+    Neuron_size=np.arange(32,32*5,32)
+    kernel_size= [3,5]
+    
     my_classifier = KerasClassifier(make_model, batch_size=32)
-    validator = GridSearchCV(my_classifier,
-                             param_grid={'dense_layer_sizes': dense_size_candidates,
+    validator = RandomizedSearchCV(my_classifier,
+                             param_distributions={'dense_layer_sizes': dense_size_candidates,
                                          # epochs is avail for tuning even when not
                                          # an argument to model building function
-                                         'epochs': [12,24,48,96],
-                                         'filters': [8],
-                                         'kernel_size': [3],
+                                         'epochs': epochs_size,
+                                         'filters': filters_size,
+                                         'Neuron': Neuron_size,
+                                         'kernel_size': kernel_size,
                                          'pool_size': [2]},
                              scoring='neg_log_loss',
                              n_jobs=1)
     
-#    validator.fit(XdataTrain, TagTrain)
-#    
+    validator.fit(XdataTrain, TagTrain)
+    
 #    print('The parameters of the best model are: ')
 #    print(validator.best_params_)
 #    
