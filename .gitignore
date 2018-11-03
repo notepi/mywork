@@ -3,3 +3,5 @@
 00weather/mergefinal/PM10/PM10.csv
 00weather/mergefinal/PM2.5/PM2.5.csv
 dd.txt
+.DS_Store
+00weather/.DS_Store
