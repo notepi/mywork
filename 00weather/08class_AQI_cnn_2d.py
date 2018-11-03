@@ -192,7 +192,7 @@ if __name__ == "__main__":
                              param_grid={'dense_layer_sizes': dense_size_candidates,
                                          # epochs is avail for tuning even when not
                                          # an argument to model building function
-                                         'epochs': [3, 6],
+                                         'epochs': [12,24,48,96],
                                          'filters': [8],
                                          'kernel_size': [3],
                                          'pool_size': [2]},
