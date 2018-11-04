@@ -76,7 +76,14 @@ def make_model(dense_layer_sizes, Neuron, filters, kernel_size, pool_size):
     kernel_size: Convolutional kernel size
     pool_size: Size of pooling area for max pooling
     '''
-
+#    kernel_size=9
+    
+    print("dense_layer_sizes",dense_layer_sizes)
+    print("Neuron",Neuron)
+    print("filters",filters)
+    print("kernel_size",kernel_size)
+    print("pool_size",pool_size)
+    
     model = Sequential()
     model.add(Conv2D(filters, kernel_size,
                      padding='valid',
@@ -188,11 +195,11 @@ if __name__ == "__main__":
     
     
     
-    dense_size_candidates = np.arange(3,10,2)
-    epochs_size = np.arange(3,24,3)
+    dense_size_candidates = np.arange(2,2*10,2)
+    epochs_size = np.arange(3,3*8,3)
     filters_size = np.arange(8,16,2)
     Neuron_size=np.arange(32,32*5,32)
-    kernel_size= [3,5]
+    kernel_size= [3,5,7,9]
     
     my_classifier = KerasClassifier(make_model, batch_size=32)
     validator = RandomizedSearchCV(my_classifier,
