@@ -110,8 +110,8 @@ def make_model(dense_layer_sizes,cnn_layer, Neuron, filters, kernel_size, pool_s
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
-    #打印出模型概况，它实际调用的是keras.utils.print_summary
-    model.summary()
+#    #打印出模型概况，它实际调用的是keras.utils.print_summary
+#    model.summary()
 
     return model
 
