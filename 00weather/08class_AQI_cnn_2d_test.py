@@ -83,6 +83,7 @@ def make_model(dense_layer_sizes,cnn_layer, Neuron, filters, kernel_size, pool_s
     print("filters",filters)
     print("kernel_size",kernel_size)
     print("pool_size",pool_size)
+    print("cnn_layer",cnn_layer)
     
     model = Sequential()
     model.add(Conv2D(filters, kernel_size,
