@@ -44,6 +44,7 @@ from sklearn.preprocessing import OneHotEncoder
 from tensorflow.examples.tutorials.mnist import input_data
 import scipy.io as sio 
 from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.externals import joblib  
 
 def file_name(file_dir):  
   for paths, dirs, files in os.walk(file_dir): 
@@ -79,27 +80,28 @@ def make_model(dense_layer_sizes, Neuron, filters, kernel_size, pool_size):
 
     model = Sequential()
     model.add(Conv2D(filters, kernel_size,
-                     padding='valid',
+                     padding='same',
                      input_shape=input_shape))
     model.add(Activation('relu'))
-    model.add(Conv2D(filters, kernel_size))
+    model.add(Conv2D(filters, kernel_size,
+                     padding='same'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=pool_size))
-    model.add(Dropout(0.25))
+#    model.add(Dropout(0.25))
 
     model.add(Flatten())
     for layer_size in range(dense_layer_sizes):
         model.add(Dense(Neuron))
         model.add(Activation('relu'))
-    model.add(Dropout(0.5))
+#    model.add(Dropout(0.5))
     model.add(Dense(num_classes))
     model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
-    #打印出模型概况，它实际调用的是keras.utils.print_summary
-    model.summary()
+#    #打印出模型概况，它实际调用的是keras.utils.print_summary
+#    model.summary()
 
     return model
 
@@ -209,19 +211,23 @@ if __name__ == "__main__":
     
     validator.fit(XdataTrain, TagTrain)
     
-#    print('The parameters of the best model are: ')
-#    print(validator.best_params_)
-#    
-#    # validator.best_estimator_ returns sklearn-wrapped version of best model.
-#    # validator.best_estimator_.model returns the (unwrapped) keras model
-#    best_model = validator.best_estimator_.model
-#    metric_names = best_model.metrics_names
-#    metric_values = best_model.evaluate(XdataTest, TagTest)
-#    for metric, value in zip(metric_names, metric_values):
-#        print(metric, ': ', value)
+    print('The parameters of the best model are: ')
+    print(validator.best_params_)
     
+    # validator.best_estimator_ returns sklearn-wrapped version of best model.
+    # validator.best_estimator_.model returns the (unwrapped) keras model
+    best_model = validator.best_estimator_.model
+    metric_names = best_model.metrics_names
+    metric_values = best_model.evaluate(XdataTest, TagTest)
+    for metric, value in zip(metric_names, metric_values):
+        print(metric, ': ', value)
     
+    metric_values = best_model.evaluate(XdataTrain, TagTrain)
+    for metric, value in zip(metric_names, metric_values):
+        print(metric, ': ', value)
     
+    #save model
+    joblib.dump(validator, "validator_test.m") 
     
     
     
