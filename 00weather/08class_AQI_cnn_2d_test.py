@@ -88,12 +88,11 @@ def make_model(dense_layer_sizes,cnn_layer, Neuron, filters, kernel_size, pool_s
     
     model = Sequential()
     model.add(Conv2D(filters, kernel_size,
-                     padding='same',
+                     padding='valid',
                      input_shape=input_shape))
     model.add(Activation('relu'))
 
-    model.add(Conv2D(filters, kernel_size,
-                     padding='same'))
+    model.add(Conv2D(filters, kernel_size))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=pool_size))
 #    model.add(Dropout(0.25))
