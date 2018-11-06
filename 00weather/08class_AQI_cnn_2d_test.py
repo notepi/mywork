@@ -68,7 +68,7 @@ def report(results, n_top=3):
         pass
     pass
 
-def make_model(dense_layer_sizes, Neuron, filters, kernel_size, pool_size):
+def make_model(dense_layer_sizes,cnn_layer, Neuron, filters, kernel_size, pool_size):
     '''Creates model comprised of 2 convolutional layers followed by dense layers
 
     dense_layer_sizes: List of layer sizes.
@@ -77,17 +77,28 @@ def make_model(dense_layer_sizes, Neuron, filters, kernel_size, pool_size):
     kernel_size: Convolutional kernel size
     pool_size: Size of pooling area for max pooling
     '''
-
+#    kernel_size=9
+    
+    print("dense_layer_sizes",dense_layer_sizes)
+    print("Neuron",Neuron)
+    print("filters",filters)
+    print("kernel_size",kernel_size)
+    print("pool_size",pool_size)
+    print("cnn_layer",cnn_layer)
+    
     model = Sequential()
     model.add(Conv2D(filters, kernel_size,
                      padding='same',
                      input_shape=input_shape))
     model.add(Activation('relu'))
+
     model.add(Conv2D(filters, kernel_size,
                      padding='same'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=pool_size))
 #    model.add(Dropout(0.25))
+
+
 
     model.add(Flatten())
     for layer_size in range(dense_layer_sizes):
@@ -190,11 +201,12 @@ if __name__ == "__main__":
     
     
     
-    dense_size_candidates = np.arange(3,10,2)
-    epochs_size = np.arange(3,24,3)
-    filters_size = np.arange(8,16,2)
+    dense_size_candidates = np.arange(2,2*10,2)
+    cnn_layers = np.arange(1,1*5,1)
+    epochs_size = np.arange(3,3*8,3)
+    filters_size = np.arange(16,16*5,16)
     Neuron_size=np.arange(32,32*5,32)
-    kernel_size= [3,5]
+    kernel_size= [3,5,7,9]
     
     my_classifier = KerasClassifier(make_model, batch_size=32)
     validator = RandomizedSearchCV(my_classifier,
@@ -204,6 +216,7 @@ if __name__ == "__main__":
                                          'epochs': epochs_size,
                                          'filters': filters_size,
                                          'Neuron': Neuron_size,
+                                         'cnn_layer':cnn_layers,
                                          'kernel_size': kernel_size,
                                          'pool_size': [2]},
                              scoring='neg_log_loss',
