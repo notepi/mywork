@@ -52,6 +52,7 @@ if __name__ == "__main__":
         pass
     DaySum.insert(0,u"日期",date)
     DaySum.to_csv("./date/real/realDaySum.csv",encoding='GBK',index=False)
+    AllData.to_csv("./date/real/AllData.csv",encoding='GBK',index=False)
     pass
     
     
