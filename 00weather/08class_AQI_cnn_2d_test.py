@@ -209,8 +209,8 @@ if __name__ == "__main__":
     kernel_size= [3,5,7,9]
     
     my_classifier = KerasClassifier(make_model, batch_size=32)
-    validator = RandomizedSearchCV(my_classifier,
-                             param_distributions={'dense_layer_sizes': dense_size_candidates,
+    validator = GridSearchCV(my_classifier,
+                             param_grid={'dense_layer_sizes': dense_size_candidates,
                                          # epochs is avail for tuning even when not
                                          # an argument to model building function
                                          'epochs': epochs_size,
