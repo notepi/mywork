@@ -10,7 +10,6 @@ import numpy as np
 import pandas as pd
 import os 
 import re
-import jieba
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer  
 from sklearn.externals import joblib  

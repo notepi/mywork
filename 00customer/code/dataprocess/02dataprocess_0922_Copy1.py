@@ -209,14 +209,15 @@ if __name__ == "__main__":
     AllData=pd.concat([AllData,temperaturErrorcode],axis=1)
     del AllData["TemperaturError"]
 
+    #对结果做编码
     cls=[]
     for i in AllData["counts"]:
         cls.append(classFir(i))
         pass
-     
+
     AllData["tag"]=cls
-    
-    
+
+
     cls=pd.DataFrame()
     for i,j in enumerate(AllData["OneDaysAgo"]):
         cls=pd.concat([cls,countsCls(j)])           
